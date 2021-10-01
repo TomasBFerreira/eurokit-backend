@@ -62,13 +62,22 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "checks": {
-            "cs-fix": "php vendor/bin/phpcbf",
-            "cs": "php vendor/bin/phpcs",
-            "stan": "php vendor/bin/phpstan analyse src",
-            "tests": "php vendor/bin/phpunit"
-        }
-        
+    "checks": [
+            "@cs-fix",
+            "@cs",
+            "@stan",
+            "@coverage",
+            "@tests",
+            "@coverage-html",
+            "@coverage"
+        ],
+        "cs-fix": "php vendor/bin/phpcbf",
+        "cs": "php vendor/bin/phpcs",
+        "stan": "php vendor/bin/phpstan analyse src",
+        "coverage": "vendor/bin/phpunit --coverage-text",
+        "tests": "php vendor/bin/phpunit",
+        "coverage-html": "php vendor/bin/phpunit --coverage-html var/coverage",
+        "coverage": "php vendor/bin/phpunit --coverage-text"
     },
     "conflict": {
         "symfony/symfony": "*"
