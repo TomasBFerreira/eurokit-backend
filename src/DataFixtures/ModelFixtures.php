@@ -19,7 +19,7 @@ class ModelFixtures extends Fixture implements DependentFixtureInterface
         $csv->setHeaderOffset(0);
 
         $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
-        $header = $csv->getHeader(); //returns the CSV header record
+
         $productrepository = $manager->getRepository(Product::class);
         
         foreach ($csv->getRecords() as $record)
@@ -30,7 +30,6 @@ class ModelFixtures extends Fixture implements DependentFixtureInterface
             $model = new Model();
             
             $model->setCode($code)->setDescription($description)->setProduct($product);
-            dump($product);
             $manager->persist($model);
         }
             
