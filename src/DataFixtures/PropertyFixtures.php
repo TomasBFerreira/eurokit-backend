@@ -2,34 +2,34 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Property;
 use App\Entity\Model;
-use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use League\Csv\Reader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class ModelFixtures extends Fixture implements DependentFixtureInterface
+class PropertyFixtures extends Fixture implements DependentFixtureInterface
 {
 
     public function load(ObjectManager $manager)
     {
-        $path = __dir__ . '/../../data/models.csv';
+        $path = __dir__ . '/../../data/properties.csv';
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0);
 
         $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
 
-        $productrepository = $manager->getRepository(Product::class);
+        $modelrepository = $manager->getRepository(Model::class);
 
         foreach ($csv->getRecords() as $record) {
-            $description = $record ['DESCRIPTION'];
-            $code = $record ['CODE'];
-            $product = $productrepository->findOneBy(['name' => $record ['PRODUCTS']]);
-            $model = new Model();
+            $name = $record ['NAME'];
+            $value = $record ['VALUE'];
+            $model = $modelrepository->findOneBy(['code' => $record ['MODEL']]);
+            $property = new Property();
 
-            $model->setCode($code)->setDescription($description)->setProduct($product);
-            $manager->persist($model);
+            $property->setName($name)->setValue($value)->setModel($model);
+            $manager->persist($property);
         }
 
             $manager->flush();
@@ -38,7 +38,7 @@ class ModelFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-        ProductFixtures::class,
+        ModelFixtures::class,
         ];
     }
 }

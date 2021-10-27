@@ -43,12 +43,14 @@ class Model
     /**
      * @ORM\OneToMany(targetEntity=Size::class, mappedBy="model", orphanRemoval=true)
      */
-    private $sizes;
+    private $sizes = [];
 
+    /**
+     *@ORM\Column(type="simple_array")
+     */
     public function __construct()
     {
         $this->properties = new ArrayCollection();
-        $this->sizes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,32 +124,14 @@ class Model
         return $this;
     }
 
-    /**
-     * @return Collection|Size[]
-     */
-    public function getSizes(): Collection
+    public function getSizes(): array
     {
         return $this->sizes;
     }
 
-    public function addSize(Size $size): self
+    public function setSizes(array $sizes): self
     {
-        if (!$this->sizes->contains($size)) {
-            $this->sizes[] = $size;
-            $size->setModel($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSize(Size $size): self
-    {
-        if ($this->sizes->removeElement($size)) {
-            // set the owning side to null (unless already changed)
-            if ($size->getModel() === $this) {
-                $size->setModel(null);
-            }
-        }
+        $this->sizes = $sizes;
 
         return $this;
     }

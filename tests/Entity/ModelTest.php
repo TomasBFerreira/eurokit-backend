@@ -5,8 +5,6 @@ namespace App\Tests\Entity;
 use App\Entity\Model;
 use App\Entity\Product;
 use App\Entity\Property;
-use App\Entity\Size;
-
 use PHPUnit\Framework\TestCase;
 
 class ModelTest extends TestCase
@@ -29,7 +27,7 @@ class ModelTest extends TestCase
         $model->setCode($code);
         $this->assertEquals('Model Code', $model->getCode());
     }
-    
+
     public function testDescription()
     {
 
@@ -39,7 +37,7 @@ class ModelTest extends TestCase
         $model->setDescription($description);
         $this->assertEquals('Model Description', $model->getDescription());
     }
-    
+
     public function testProduct()
     {
 
@@ -50,10 +48,10 @@ class ModelTest extends TestCase
 
         $this->assertSame($product, $model->getProduct());
     }
-    
+
     public function testProperties()
     {
-        
+
         $model = new Model();
 
 
@@ -70,31 +68,15 @@ class ModelTest extends TestCase
 
         $model->removeProperty($property);
         $this->assertCount(1, $model->getProperties());
-
     }
-    
+
     public function testSize()
     {
-        
+
         $model = new Model();
+        $sizes = [1, 2, 3];
 
-
-        $this->assertCount(0, $model->getSizes());
-
-        $size = new Size();
-        $size2 = new Size();
-
-        $model->addSize($size);
-        $this->assertCount(1, $model->getSizes());
-
-        $model->addSize($size2);
-        $this->assertCount(2, $model->getSizes());
-
-        $model->removeSize($size);
-        $this->assertCount(1, $model->getSizes());
-
+        $model->setSizes($sizes);
+        $this->assertSame($sizes, $model->getSizes());
     }
-    
-    
-    
 }

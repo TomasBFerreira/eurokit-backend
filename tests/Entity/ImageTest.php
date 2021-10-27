@@ -3,7 +3,6 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Image;
-
 use PHPUnit\Framework\TestCase;
 
 class ImageTest extends TestCase
@@ -15,16 +14,15 @@ class ImageTest extends TestCase
 
         $this->assertNull($image->getId());
     }
-    
+
     public function testFilename()
     {
-        
+
         $image = new Image();
         $filename = 'abc';
-        
+
         $image->setFilename($filename);
 
         $this->assertSame($filename, $image->getFilename());
-        
     }
 }

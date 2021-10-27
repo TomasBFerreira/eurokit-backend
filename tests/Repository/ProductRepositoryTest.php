@@ -10,6 +10,7 @@
  *
  * @author tomas
  */
-class ProductRepositoryTest {
+class ProductRepositoryTest
+{
     //put your code here
 }

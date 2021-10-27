@@ -3,7 +3,6 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Property;
-
 use PHPUnit\Framework\TestCase;
 
 class PropertyTest extends TestCase
@@ -15,7 +14,7 @@ class PropertyTest extends TestCase
 
         $this->assertNull($property->getId());
     }
-    
+
     public function testName()
     {
 
@@ -26,10 +25,10 @@ class PropertyTest extends TestCase
 
         $this->assertSame($name, $property->getName());
     }
-    
-    public function testValue() 
+
+    public function testValue()
     {
-        
+
         $property = new Property();
         $value = 'Value';
 

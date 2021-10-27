@@ -4,7 +4,6 @@ namespace App\Tests\Entity;
 
 use App\Entity\Product;
 use App\Entity\Series;
-
 use PHPUnit\Framework\TestCase;
 
 class SeriesTest extends TestCase
@@ -27,7 +26,7 @@ class SeriesTest extends TestCase
 
         $this->assertSame($name, $series->getName());
     }
-    
+
     public function testProducts()
     {
 
@@ -48,5 +47,4 @@ class SeriesTest extends TestCase
         $series->removeProduct($product);
         $this->assertCount(1, $series->getProducts());
     }
-    
 }
