@@ -14,7 +14,7 @@ class ModelFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $path = __dir__ . '/../../data/models.csv';
+        $path = __dir__ . '/../../data/newmodels.csv';
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0);
 
@@ -25,10 +25,14 @@ class ModelFixtures extends Fixture implements DependentFixtureInterface
         foreach ($csv->getRecords() as $record) {
             $description = $record ['DESCRIPTION'];
             $code = $record ['CODE'];
+            $antisize = $record ['SIZES'];
+            
+            
+            $size_array = explode(",", $antisize);
             $product = $productrepository->findOneBy(['name' => $record ['PRODUCTS']]);
             $model = new Model();
 
-            $model->setCode($code)->setDescription($description)->setProduct($product);
+            $model->setCode($code)->setDescription($description)->setProduct($product)->setSizes($size_array);
             $manager->persist($model);
         }
 

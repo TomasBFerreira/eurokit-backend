@@ -2,8 +2,7 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Model;
-use App\Entity\Product;
+use App\Entity\Model;use App\Entity\Product;
 use App\Entity\Property;
 use PHPUnit\Framework\TestCase;
 

@@ -40,9 +40,6 @@ class Model
      */
     private $properties;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Size::class, mappedBy="model", orphanRemoval=true)
-     */
     private $sizes = [];
 
     /**
