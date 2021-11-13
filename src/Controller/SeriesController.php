@@ -6,6 +6,7 @@ use App\Entity\Series;
 use App\Repository\SeriesRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,6 +31,6 @@ class SeriesController extends AbstractController
             $result[] = ['id'=> $series->getId(), 'name'=> $series->getName()];
             }
         
-        return $this->json($result);
+        return new JsonResponse($result);
     }
 }

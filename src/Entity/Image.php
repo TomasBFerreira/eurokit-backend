@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
@@ -12,8 +13,7 @@ class Image
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=36)
      */
     private $id;
 
@@ -28,7 +28,11 @@ class Image
      */
     private $product;
 
-    public function getId(): ?int
+    public function __construct()
+    {
+    $this->id = Uuid::uuid4()->toString();
+        }
+    public function getId(): string
     {
         return $this->id;
     }

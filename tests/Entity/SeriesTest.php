@@ -12,8 +12,8 @@ class SeriesTest extends TestCase
     {
 
         $series = new Series();
-
-        $this->assertNull($series->getId());
+        
+        $this->assertSame(1, preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $series->getId()));
     }
 
     public function testName()

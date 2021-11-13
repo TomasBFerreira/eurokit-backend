@@ -10,10 +10,10 @@ use League\Csv\Reader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class ProductFixtures extends Fixture implements DependentFixtureInterface
-{
+    {
 
     public function load(ObjectManager $manager)
-    {
+        {
         $path = __dir__ . '/../../data/products.csv';
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0);
@@ -22,23 +22,24 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
         $header = $csv->getHeader(); //returns the CSV header record
         $seriesrepository = $manager->getRepository(Series::class);
 
-        foreach ($csv->getRecords() as $record) {
+        foreach ($csv->getRecords() as $record)
+            {
             $name = $record ['NAME'];
             $series = $seriesrepository->findOneBy(['name' => $record ['SERIES']]);
             $product = new Product();
 
             $product->setName($name)->setSeries($series);
-            //dump($product);
             $manager->persist($product);
+            }
+
+        $manager->flush();
         }
 
-            $manager->flush();
-    }
-
     public function getDependencies()
-    {
+        {
         return [
-        SeriesFixtures::class,
+            SeriesFixtures::class,
         ];
+        }
+
     }
-}

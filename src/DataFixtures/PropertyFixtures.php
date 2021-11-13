@@ -10,11 +10,11 @@ use League\Csv\Reader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class PropertyFixtures extends Fixture implements DependentFixtureInterface
-{
+    {
 
     public function load(ObjectManager $manager)
-    {
-        $path = __dir__ . '/../../data/properties.csv';
+        {
+        $path = __dir__ . '/../../data/temp_properties.csv';
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0);
 
@@ -22,23 +22,37 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
 
         $modelrepository = $manager->getRepository(Model::class);
 
-        foreach ($csv->getRecords() as $record) {
-            $name = $record ['NAME'];
-            $value = $record ['VALUE'];
-            $model = $modelrepository->findOneBy(['code' => $record ['MODEL']]);
-            $property = new Property();
+        foreach ($csv->getRecords() as $record)
+            {
 
-            $property->setName($name)->setValue($value)->setModel($model);
-            $manager->persist($property);
+            $model = $modelrepository->findOneBy(['code' => $record ['MODEL']]);
+
+            if ($model === null)
+                {
+                throw new \RuntimeException("Could not find Model with the code  " . $record ['MODEL']);
+                }
+
+            foreach ($record as $key => $value)
+                {
+                if ($key === ['MODEL'])
+                    {
+                    continue;
+                    }
+                $property = new Property();
+
+                $property->setModel($model)->setName($key)->setValue($value);
+
+                $manager->persist($property);
+                }
+            }
+        $manager->flush();
         }
 
-            $manager->flush();
-    }
-
     public function getDependencies()
-    {
+        {
         return [
-        ModelFixtures::class,
+            ModelFixtures::class,
         ];
+        }
+
     }
-}

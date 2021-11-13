@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -14,8 +15,7 @@ class Product
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=36)
      */
     private $id;
 
@@ -44,9 +44,10 @@ class Product
     {
         $this->models = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->id = Uuid::uuid4()->toString();
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
