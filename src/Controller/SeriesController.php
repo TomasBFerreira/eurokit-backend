@@ -29,6 +29,10 @@ class SeriesController extends AbstractController
         foreach ($this->repository->findAll() as $series)
             {
             $result[] = ['id'=> $series->getId(), 'name'=> $series->getName()];
+            
+            if ($result === []){
+            return new JsonResponse([error=>"Series not found"], 404);
+            }
             }
         
         return new JsonResponse($result);
