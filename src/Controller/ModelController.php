@@ -6,6 +6,8 @@ use App\Entity\Model;
 use App\Repository\ModelRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +16,7 @@ class ModelController extends AbstractController
 {
     private ModelRepository $repository;
     
-    public function __construct(ProductRepository $repository)
+    public function __construct(ModelRepository $repository)
         {
         $this->repository = $repository;
         }
@@ -46,4 +48,9 @@ class ModelController extends AbstractController
             }
         return new JsonResponse($model);
     }
+    
+     /**
+     * @Route("/search/{name}", name="search")
+     */
 }
+

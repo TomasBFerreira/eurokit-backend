@@ -14,37 +14,44 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Product::class);
     }
 
-    // /**
-    //  * @return Product[] Returns an array of Product objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * 
+     * @return Product[]
+     */
+    public function findWithSeries(string $id): ?Product
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $alias = 'p';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->where('p.id = :id')
+                ->join('p.series', 's')
+                ->getQuery();
+        
+        $query->setParameter('id', $id);
+        $result = $query->getResult();
+        
+        return $result[0] ?? null;        
     }
-    */
+    
+    public function findAllWithSeries(): array
+    {
+        $alias = 'p';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->join('p.series', 's')
+                ->getQuery();
+        
+        $result = $query->getResult();
+        
+        return $result;        
+    }
 
-    /*
-    public function findOneBySomeField($value): ?Product
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
