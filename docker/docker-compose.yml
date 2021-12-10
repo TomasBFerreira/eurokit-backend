@@ -1,0 +1,56 @@
+version: "3.1"
+
+services:
+    mysql:
+        container_name: mysql-eurokit
+        image: mysql:5.7
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        volumes:
+            - ./build/mysql/init:/docker-entrypoint-initdb.d
+            - ./data/mysql:/var/lib/mysql:cached
+            - ./logs/mysql:/var/log/mysql:cached
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - sail
+
+#    localstack:
+#        image: localstack/localstack
+#        environment:
+#            LOCALSTACK_HOSTNAME: localhost
+#            HOSTNAME: localhost
+#            DEFAULT_REGION: eu-west-2
+#            AWS_DEFAULT_REGION: us-east-2
+#            EDGE_PORT: 4566
+#            #SERVICES: lambda,s3
+#        ports:
+#            - "4566:4566"
+#            - "4571:4571"
+#            - "8080:8080"
+#        networks:
+#            - sail
+#        volumes: 
+#            - "${TEMPDIR:-/tmp/localstack}:/tmp/localstack"
+#            - "/var/run/docker.sock:/var/run/docker.sock"
+#
+#    mailhog:
+#        image: mailhog/mailhog:latest
+#        restart: always
+#        ports:
+#            - "1025:1025"
+#            - "8025:8025"            
+#        networks:
+#            - sail
+
+#    sftp:
+#        image: atmoz/sftp
+#        ports:
+#            - "2222:22"
+#        environment:
+#          SFTP_USERS: suitsme:suitsme:::upload
+
+networks:
+    sail:
+        driver: bridge
