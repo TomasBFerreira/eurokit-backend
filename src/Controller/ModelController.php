@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Extractor\ModelExtractor;
 use App\Entity\Model;
 use App\Repository\ModelRepository;
 
@@ -16,9 +17,10 @@ class ModelController extends AbstractController
 {
     private ModelRepository $repository;
     
-    public function __construct(ModelRepository $repository)
+    public function __construct(ModelRepository $repository, ModelExtractor $extractor)
         {
         $this->repository = $repository;
+        $this->extractor = $extractor;
         }
     /**
      * @Route("/models", name="models")
@@ -26,31 +28,31 @@ class ModelController extends AbstractController
     public function index(): Response
     {
         $result = [];
-        
-        /** @var Product $model */
-        foreach ($this->repository->findAll() as $model)
-            {
-            $result[] = ['id'=> $model->getId(), 'name'=> $model->getName()];
-            }
-        
+
+        /** @var Model $model */
+        foreach ($this->repository->findAllWithProducts() as $model) {
+            $result[] = $this->extractor->extract($model, true);
+        }
+
         return new JsonResponse($result);
     }
-    
-     /**
+
+    /**
      * @Route("/models/{id}", name="models/view")
      */
     public function view(string $id): Response
     {
-        $model = $this->repository->find($id);
-        
-        if ($model === null){
-            return new JsonResponse([error=>"Model not found"], 404);
-            }
-        return new JsonResponse($model);
+        $model = $this->repository->findWithProduct($id);
+
+        if ($model === null) {
+            return new JsonResponse([error => "Model not found"], 404);
+        }
+
+        $data = $this->extractor->extract($model, true);
+
+        return new JsonResponse($data);
     }
-    
-     /**
-     * @Route("/search/{name}", name="search")
-     */
+
+
 }
 

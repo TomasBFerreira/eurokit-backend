@@ -18,33 +18,36 @@ class ModelRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Model::class);
     }
-
-    // /**
-    //  * @return Model[] Returns an array of Model objects
+    /* @return Model[] Returns an array of Model objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+   public function findWithProduct(string $id): ?Model
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $alias = 'm';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->where('m.id = :id')
+                ->join('m.product', 'p')
+                ->getQuery();
+        
+        $query->setParameter('id', $id);
+        $result = $query->getResult();
+        
+        return $result[0] ?? null;        
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Model
+    
+    public function findAllWithProducts(): array
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $alias = 'm';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->join('m.product', 'p')
+                ->getQuery();
+        
+        $result = $query->getResult();
+        
+        return $result;        
     }
-    */
 }

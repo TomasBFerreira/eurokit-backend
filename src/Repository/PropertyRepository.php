@@ -22,29 +22,35 @@ class PropertyRepository extends ServiceEntityRepository
     // /**
     //  * @return Property[] Returns an array of Property objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findWithModel(string $id): ?Property
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $alias = 'p';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->where('p.id = :id')
+                ->join('p.model', 'm')
+                ->getQuery();
+        
+        $query->setParameter('id', $id);
+        $result = $query->getResult();
+        
+        return $result[0] ?? null;        
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Property
+    
+    public function findAllWithModels(): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $alias = 'p';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->join('p.model', 'm')
+                ->getQuery();
+        
+        $result = $query->getResult();
+        
+        return $result;        
     }
-    */
 }
+
