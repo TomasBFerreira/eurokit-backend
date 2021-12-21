@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ModelController extends AbstractController
 {
+    private ModelExtractor $extractor;
     private ModelRepository $repository;
     
     public function __construct(ModelRepository $repository, ModelExtractor $extractor)
