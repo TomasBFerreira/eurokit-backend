@@ -50,4 +50,20 @@ class ModelRepository extends ServiceEntityRepository
         
         return $result;        
     }
+    
+       public function findWithManyProducts(string $id): array
+    {
+        $alias = 'm';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->where('m.product = :id')
+                //->from('m.properties', 'pr')
+                ->getQuery();
+        
+        $query->setParameter('id', $id);
+        $result = $query->getResult();
+        
+        return $result;        
+    }
 }

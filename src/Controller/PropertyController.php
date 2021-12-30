@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Property;
+use App\Entity\Model;
 use App\Extractor\PropertyExtractor;
 use App\Repository\PropertyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,6 +53,21 @@ class PropertyController extends AbstractController
         return new JsonResponse($data);
     }
 
+    /**
+     * @Route("/product/{id}", name="product/view")
+     
+    public function productView(string $id): Response
+    {
+        $data = [];
+        
+        foreach ($this->repository->findWithManyProducts($id) as $model){
+            $data[] = $this->extractor->extract($model, true);
+        }
+        
 
+        
 
+        return new JsonResponse($data);
+    }
+*/
 }
