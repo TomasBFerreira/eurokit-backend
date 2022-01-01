@@ -112,6 +112,7 @@ class ProductController extends AbstractController
         $data = [
             'code' => $model->getCode(),
             'description' => $model->getDescription(),
+            'sizes' => $model->getSizes(),
             'properties' => $this->extractProperties($properties)
         ];
                 
