@@ -2,13 +2,20 @@
 
 namespace App\Controller;
 
+use Doctrine\Common\Collections\Collection;
 use App\Extractor\ProductExtractor;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use App\Entity\Property;
+use App\Entity\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ProductController extends AbstractController
 {
@@ -53,5 +60,76 @@ class ProductController extends AbstractController
         return new JsonResponse($data);
     }
 
+    /**
+     * @Route("/product/{id}", name="product/view")
+     */
+    public function productView(string $id): Response
+    {
 
+
+        $product = $this->repository->findWithManyProducts($id);
+
+        if ($product === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $normalizer = new ObjectNormalizer();
+        $encoder = new JsonEncoder();
+
+        $serializer = new Serializer([$normalizer], [$encoder]);
+
+        $data = $this->extractProduct($product);
+
+        return new JsonResponse($data);
+    }
+
+    private function extractProduct(Product $product): array
+    {
+        $models = $product->getModels();
+
+        $data = [
+            'name' => $product->getName(),
+            'models' => $this->extractModels($models)
+        ];
+
+        return $data;
+    }
+
+    private function extractModels(Collection $models): array
+    {
+        $data = [];
+        
+        foreach ($models as $model) {
+            $data[] = $this->extractModel($model);
+        }
+        return $data;
+    }
+    
+    private function extractModel(Model $model): array
+    {
+        $properties = $model->getProperties();
+        
+        $data = [
+            'code' => $model->getCode(),
+            'description' => $model->getDescription(),
+            'sizes' => $model->getSizes(),
+            'properties' => $this->extractProperties($properties)
+        ];
+                
+        return $data;
+    }
+    
+    private function extractProperties(Collection $properties): array
+    {
+        $data = [];
+        
+        foreach ($properties as $property){
+            $name = $property->getName();
+            $value = $property->getValue();
+            
+            $data[$name] = $value;
+        }
+        
+        return $data;
+    }
 }

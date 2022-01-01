@@ -52,5 +52,21 @@ class PropertyRepository extends ServiceEntityRepository
         
         return $result;        
     }
+    
+      public function findWithManyProducts(string $id): array
+    {
+        $alias = 'p';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->where('p.model = :id')
+                ->join('p.property', 'p')
+                ->getQuery();
+        
+        $query->setParameter('id', $id);
+        $result = $query->getResult();
+        
+        return $result;        
+    }
 }
 

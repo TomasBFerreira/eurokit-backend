@@ -53,5 +53,22 @@ class ProductRepository extends ServiceEntityRepository
         
         return $result;        
     }
-
+    
+    public function findWithManyProducts(string $id): ?Product
+    {
+        $alias = 'p';
+        $qb = $this->createQueryBuilder($alias);
+        
+        $query = $qb
+                ->where('p.id = :id')
+                ->join('p.series', 's')
+                ->join('p.models', 'm')
+                ->join('m.properties', 'pr')
+                ->getQuery();
+        
+        $query->setParameter('id', $id);
+        $result = $query->getOneOrNullResult();
+        
+        return $result;        
+    }
 }

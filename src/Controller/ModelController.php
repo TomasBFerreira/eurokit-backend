@@ -54,6 +54,25 @@ class ModelController extends AbstractController
         return new JsonResponse($data);
     }
 
+     /**
+     * @Route("/product/{id}", name="product/view")
+     
+    public function productView(string $id): Response
+    {
+        $data = [];
+        
+        foreach ($this->repository->findWithManyProducts($id) as $model){
+            $data[] = $this->extractor->extract($model, true);
+        }
+        if ($model === null) {
+            return new JsonResponse([error => "Products not found"], 404);
+        }
+
+        
+
+        return new JsonResponse($data);
+    }
+*/
 
 }
 
