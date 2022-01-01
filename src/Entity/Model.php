@@ -40,11 +40,12 @@ class Model
      */
     private $properties;
 
-    private $sizes = [];
-
     /**
      *@ORM\Column(type="simple_array")
      */
+    private $sizes = [];
+
+    
     public function __construct()
     {
         $this->properties = new ArrayCollection();

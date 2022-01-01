@@ -73,11 +73,6 @@ class ProductController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $normalizer = new ObjectNormalizer();
-        $encoder = new JsonEncoder();
-
-        $serializer = new Serializer([$normalizer], [$encoder]);
-
         $data = $this->extractProduct($product);
 
         return new JsonResponse($data);
@@ -112,6 +107,7 @@ class ProductController extends AbstractController
         $data = [
             'code' => $model->getCode(),
             'description' => $model->getDescription(),
+            'sizes' => $model->getSizes(),
             'properties' => $this->extractProperties($properties)
         ];
                 
