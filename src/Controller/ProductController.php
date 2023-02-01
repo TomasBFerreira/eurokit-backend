@@ -41,7 +41,7 @@ class ProductController extends AbstractController
             $result[] = $this->extractor->extract($product, true);
         }
 
-        return new JsonResponse($result);
+        return new JsonResponse(json_encode($result, JSON_PRETTY_PRINT), 200, [], true);
     }
 
     /**
@@ -57,7 +57,8 @@ class ProductController extends AbstractController
 
         $data = $this->extractor->extract($product, true);
 
-        return new JsonResponse($data);
+        $options = JSON_PRETTY_PRINT;
+        return new JsonResponse(json_encode($data, $options), 200, [], true);
     }
 
     /**
@@ -68,34 +69,34 @@ class ProductController extends AbstractController
 
 
         $product = $this->repository->findWithManyProducts($id);
+        $model = $this->repository->extractProduct($models);
+
 
         if ($product === null) {
             throw new NotFoundHttpException();
         }
 
-        $normalizer = new ObjectNormalizer();
-        $encoder = new JsonEncoder();
+        $data = $this->extractProduct($product, $model, $properties, $sizes);
 
-        $serializer = new Serializer([$normalizer], [$encoder]);
-
-        $data = $this->extractProduct($product);
-
-        return new JsonResponse($data);
+        $options = JSON_PRETTY_PRINT;
+        return new JsonResponse(json_encode($data, $options), 200, [], true);
     }
 
-    private function extractProduct(Product $product): array
+    private function extractProduct(Product $product, Model $model, Porperties $properties, Sizes $sizes): array
     {
         $models = $product->getModels();
+        $properties = $model->getProperties();
 
         $data = [
             'name' => $product->getName(),
-            'models' => $this->extractModels($models)
+            'models' => $model->getModel(),
+            'code' => $this->extractProperties($properties)
         ];
 
         return $data;
     }
 
-    private function extractModels(Collection $models): array
+    private function extractModels(Collection $models): self
     {
         $data = [];
         
@@ -105,7 +106,7 @@ class ProductController extends AbstractController
         return $data;
     }
     
-    private function extractModel(Model $model): array
+    private function extractModel(Model $model): self
     {
         $properties = $model->getProperties();
         
@@ -118,7 +119,7 @@ class ProductController extends AbstractController
         return $data;
     }
     
-    private function extractProperties(Collection $properties): array
+    private function extractProperties(Collection $properties): self
     {
         $data = [];
         

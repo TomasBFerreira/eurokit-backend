@@ -40,14 +40,16 @@ class Model
      */
     private $properties;
 
-    private $sizes = [];
-
     /**
-     *@ORM\Column(type="simple_array")
+     * @ORM\OneToMany(targetEntity=Size::class, mappedBy="model", orphanRemoval=true)
      */
+    private $sizes;
+
+
     public function __construct()
     {
         $this->properties = new ArrayCollection();
+        $this->sizes= new ArrayCollection();
         $this->id = Uuid::uuid4()->toString();
         
     }
@@ -123,14 +125,32 @@ class Model
         return $this;
     }
 
-    public function getSizes(): array
+   /**
+     * @return Collection|Size[]
+     */
+    public function getSizes(): Collection
     {
         return $this->sizes;
     }
 
-    public function setSizes(array $sizes): self
+    public function addSize(Size $size): self
     {
-        $this->sizes = $sizes;
+        if (!$this->sizes->contains($size)) {
+            $this->sizes[] = $size;
+            $size->setModel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSize(Size $size): self
+    {
+        if ($this->size->removeElement($size)) {
+            // set the owning side to null (unless already changed)
+            if ($size->getModel() === $this) {
+                $size->setModel(null);
+            }
+        }
 
         return $this;
     }

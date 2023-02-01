@@ -35,7 +35,8 @@ class ModelController extends AbstractController
             $result[] = $this->extractor->extract($model, true);
         }
 
-        return new JsonResponse($result);
+        $options = JSON_PRETTY_PRINT;
+        return new JsonResponse(json_encode($result, $options), 200, [], true);
     }
 
     /**
@@ -43,36 +44,16 @@ class ModelController extends AbstractController
      */
     public function view(string $id): Response
     {
-        $model = $this->repository->findWithProduct($id);
+    $model = $this->repository->findWithProduct($id);
 
-        if ($model === null) {
-            return new JsonResponse([error => "Model not found"], 404);
-        }
-
-        $data = $this->extractor->extract($model, true);
-
-        return new JsonResponse($data);
+    if ($model === null) {
+        return new JsonResponse([error => "Model not found"], 404);
     }
 
-     /**
-     * @Route("/product/{id}", name="product/view")
-     
-    public function productView(string $id): Response
-    {
-        $data = [];
-        
-        foreach ($this->repository->findWithManyProducts($id) as $model){
-            $data[] = $this->extractor->extract($model, true);
-        }
-        if ($model === null) {
-            return new JsonResponse([error => "Products not found"], 404);
-        }
+    $data = $this->extractor->extract($model, true);
 
-        
-
-        return new JsonResponse($data);
+    $options = JSON_PRETTY_PRINT;
+    return new JsonResponse(json_encode($data, $options), 200, [], true);
     }
-*/
-
 }
 

@@ -8,33 +8,40 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use League\Csv\Reader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use League\Csv\Statement;
 
 class ModelFixtures extends Fixture implements DependentFixtureInterface
     {
 
     public function load(ObjectManager $manager)
         {
-        $path = __dir__ . '/../../data/temp_models.csv';
-        $csv = Reader::createFromPath($path, 'r');
-        $csv->setHeaderOffset(0);
+            $path = __dir__ . '/../../data/allM.csv';
+            $csv = Reader::createFromPath($path, 'r');
+            $csv->setHeaderOffset(0);
+    
+            $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
+    
+            $productrepository = $manager->getRepository(Product::class);
+    
+            foreach ($csv->getRecords() as $record)
+                {            
+                    $product = $productrepository->findOneBy(['name' => $record ['PRODUCTS']]); 
+                    $description = $record ['Descriere'];
+                $code = $record ['Serie'];
+                if ($product === null)
+                    {
+                    throw new \RuntimeException("Could not find Product with the name  " . $record ['PRODUCTS']);
+                    }
+                    
+                $model = new Model();
+                
+                
 
-        $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
+                $model->setCode($code)->setDescription($description)->setProduct($product);
+                $manager->persist($model);
 
-        $productrepository = $manager->getRepository(Product::class);
-
-        foreach ($csv->getRecords() as $record)
-            {
-            $description = $record ['DESCRIPTION'];
-            $code = $record ['CODE'];
-            $size = $record ['SIZES'];
-
-            $size_array = explode(",", $size);
-            $product = $productrepository->findOneBy(['name' => $record ['PRODUCTS']]);
-            $model = new Model();
-
-            $model->setCode($code)->setDescription($description)->setProduct($product)->setSizes($size_array);
-            $manager->persist($model);
-            }
+                    
+                }
 
         $manager->flush();
         }

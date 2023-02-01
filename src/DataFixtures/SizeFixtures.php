@@ -2,19 +2,19 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Property;
+use App\Entity\Size;
 use App\Entity\Model;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use League\Csv\Reader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class PropertyFixtures extends Fixture implements DependentFixtureInterface
+class SizeFixtures extends Fixture implements DependentFixtureInterface
     {
 
     public function load(ObjectManager $manager)
         {
-        $path = __dir__ . '/../../data/properties.csv';
+        $path = __dir__ . '/../../data/allS.csv';
         $csv = Reader::createFromPath($path, 'r');
         $csv->setHeaderOffset(0);
 
@@ -39,11 +39,11 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
                     {
                     continue;
                     }
-                $property = new Property();
+                $size = new Size();
 
-                $property->setModel($model)->setName($key)->setValue($value);
+                $size->setModel($model)->setSize($key)->setValue($value);
 
-                $manager->persist($property);
+                $manager->persist($size);
                 }
             }
         $manager->flush();
