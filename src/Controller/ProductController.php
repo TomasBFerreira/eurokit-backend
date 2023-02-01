@@ -76,10 +76,16 @@ class ProductController extends AbstractController
             throw new NotFoundHttpException();
         }
 
+<<<<<<< HEAD
         $data = $this->extractProduct($product, $model, $properties, $sizes);
 
         $options = JSON_PRETTY_PRINT;
         return new JsonResponse(json_encode($data, $options), 200, [], true);
+=======
+        $data = $this->extractProduct($product);
+
+        return new JsonResponse($data);
+>>>>>>> d03895a0cf1a9ad57991b91f2c0ddcc09529d593
     }
 
     private function extractProduct(Product $product, Model $model, Porperties $properties, Sizes $sizes): array
@@ -113,6 +119,7 @@ class ProductController extends AbstractController
         $data = [
             'code' => $model->getCode(),
             'description' => $model->getDescription(),
+            'sizes' => $model->getSizes(),
             'properties' => $this->extractProperties($properties)
         ];
                 

@@ -43,9 +43,15 @@ class Model
     /**
      * @ORM\OneToMany(targetEntity=Size::class, mappedBy="model", orphanRemoval=true)
      */
+<<<<<<< HEAD
     private $sizes;
 
 
+=======
+    private $sizes = [];
+
+    
+>>>>>>> d03895a0cf1a9ad57991b91f2c0ddcc09529d593
     public function __construct()
     {
         $this->properties = new ArrayCollection();
